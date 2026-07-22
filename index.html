@@ -361,6 +361,118 @@
     font-size:12px; margin-top:16px;
   }
   .mock-dot{width:8px; height:8px; border-radius:50%; flex:none;}
+
+  /* ---------- MODE TOGGLE ---------- */
+  .mode-toggle{
+    display:inline-flex; gap:4px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:4px;
+    margin-bottom:22px;
+  }
+  .mode-toggle button{
+    border:none; background:transparent;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px; font-weight:500;
+    padding:7px 16px; border-radius:999px;
+    cursor:pointer; color:var(--ink-soft);
+    transition:background .15s, color .15s;
+  }
+  .mode-toggle button.active{background:var(--ink); color:var(--bg);}
+
+  /* ---------- ELEVATION ---------- */
+  .elev-row{
+    display:flex; gap:22px; flex-wrap:wrap;
+    padding:34px 20px;
+    border-radius:16px;
+  }
+  .elev-box{
+    width:110px; height:80px;
+    border-radius:12px;
+    display:flex; align-items:flex-end; justify-content:center;
+    padding-bottom:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+  }
+
+  /* ---------- GRADIENTS ---------- */
+  .gradient-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-bottom:10px;
+  }
+  @media(max-width:640px){ .gradient-grid{grid-template-columns:1fr;} }
+  .gradient-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    background:var(--surface);
+  }
+  .gradient-swatch{height:110px; position:relative;}
+  .gradient-swatch .overlay-demo-text{
+    position:absolute; left:14px; bottom:12px;
+    color:#fff; font-family:'Fraunces', serif; font-weight:600; font-size:15px;
+  }
+  .gradient-meta{padding:12px 14px;}
+  .gradient-meta .gname{font-size:13px; font-weight:600; margin-bottom:2px;}
+  .gradient-meta .guse{font-size:11.5px; color:var(--ink-soft); line-height:1.4; margin-bottom:6px;}
+  .gradient-meta code{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    display:block;
+    word-break:break-all;
+    background:var(--bg);
+    padding:6px 8px;
+    border-radius:6px;
+    border:1px solid var(--line-soft);
+  }
+
+  /* ---------- EXPORT / CODE ---------- */
+  .code-block{
+    position:relative;
+    background:#1B1A17;
+    border-radius:var(--radius);
+    padding:20px 20px 16px;
+    margin-bottom:22px;
+    overflow-x:auto;
+  }
+  .code-block pre{
+    margin:0;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    line-height:1.7;
+    color:#E8E5DC;
+    white-space:pre;
+  }
+  .code-block .ctok{color:#9FD6A0;}
+  .code-block .vtok{color:#E3B279;}
+  .copy-btn{
+    position:absolute; top:14px; right:14px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; font-weight:600;
+    background:rgba(255,255,255,0.1);
+    color:#E8E5DC;
+    border:1px solid rgba(255,255,255,0.16);
+    border-radius:7px;
+    padding:6px 11px;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .copy-btn:hover{background:rgba(255,255,255,0.18);}
+  .code-tabs{display:flex; gap:8px; margin-bottom:14px;}
+  .code-tabs button{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px; font-weight:500;
+    padding:7px 14px; border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .code-tabs button.active{background:var(--ink); color:var(--bg); border-color:var(--ink);}
 </style>
 </head>
 <body>
@@ -483,6 +595,11 @@
   <h2>Automatic UI palette</h2>
   <p class="lede">This is the part that used to take guesswork: every role a real website needs — background, buttons, hover, shadows, warnings, notifications — generated automatically from your base color. Nothing to pick, just what you dragged on the wheel above.</p>
 
+  <div class="mode-toggle" id="modeToggle">
+    <button id="modeLight" class="active">☀ Light</button>
+    <button id="modeDark">● Dark</button>
+  </div>
+
   <div class="role-grid" id="roleGrid"></div>
 
   <p class="lede" style="margin-bottom:16px;">And here's that palette actually applied, live:</p>
@@ -508,10 +625,20 @@
       </div>
     </div>
   </div>
+
+  <p class="lede" style="margin:30px 0 14px;">Elevation scale — same tinted shadow, four strengths, for consistent depth across cards, dropdowns, and modals:</p>
+  <div class="elev-row" id="elevRow"></div>
+</section>
+
+<section id="gradient-section">
+  <div class="num">06</div>
+  <h2>Gradients</h2>
+  <p class="lede">Built from the same palette so they never clash with it — a smooth brand gradient, a punchier accent for banners, a button gradient with real depth, and a scrim for legible text over images.</p>
+  <div class="gradient-grid" id="gradientGrid"></div>
 </section>
 
 <section id="contrast-section">
-  <div class="num">06</div>
+  <div class="num">07</div>
   <h2>Contrast & legibility</h2>
   <p class="lede">A beautiful palette still needs to be readable. WCAG sets minimum contrast ratios between text and its background: <b>4.5:1</b> for normal text (AA), <b>3:1</b> for large text, <b>7:1</b> for AAA. This checks your base color against black and white text live.</p>
 
@@ -533,8 +660,26 @@
   </div>
 </section>
 
+<section id="export-section">
+  <div class="num">08</div>
+  <h2>Export</h2>
+  <p class="lede">Copy-paste ready. Both blocks update live with your current color and cover light + dark automatically.</p>
+  <div class="code-tabs">
+    <button id="tabCss" class="active">CSS variables</button>
+    <button id="tabTailwind">Tailwind config</button>
+  </div>
+  <div class="code-block" id="cssBlock">
+    <button class="copy-btn" id="copyCss">Copy</button>
+    <pre id="cssCode"></pre>
+  </div>
+  <div class="code-block" id="twBlock" style="display:none;">
+    <button class="copy-btn" id="copyTw">Copy</button>
+    <pre id="twCode"></pre>
+  </div>
+</section>
+
 <section id="cheat-section">
-  <div class="num">07</div>
+  <div class="num">09</div>
   <h2>Quick cheat sheet</h2>
   <dl class="cheat">
     <dt>Hue</dt><dd>The pure color, 0–360° on the wheel (red → yellow → green → blue → red).</dd>
@@ -553,6 +698,8 @@
     <dt>Hover / Active states</dt><dd>Same hue, darker shade. ~12% darker for hover, ~22% for active/pressed — never a different color.</dd>
     <dt>Shadows</dt><dd>Never pure black. A low-opacity, hue-tinted dark shade of your base reads as "elevation," not a gray smudge.</dd>
     <dt>Status colors</dt><dd>Success (green), Warning (amber), Error (red), Info (blue) stay on recognizable hues by convention — but tune their saturation to match your base so they feel native to the palette, not bolted on.</dd>
+    <dt>Gradients</dt><dd>Stay in-family: blend tints/shades of one hue for calm gradients, or base + analogous for a livelier one. Avoid gradienting across a full complementary jump — it muddies in the middle.</dd>
+    <dt>Dark mode</dt><dd>Don't just invert. Backgrounds get dark, near-desaturated; text goes light; and interactive hover/active states lighten instead of darken, since darkening is invisible on a dark canvas.</dd>
   </dl>
 </section>
 
@@ -689,26 +836,50 @@ function buildHarmonySwatches(el, hues, sat, light){
   });
 }
 
-function computeSemanticPalette(){
+function computeSemanticPalette(dark){
   const p = {};
-  p.background   = hslToHex(H, clamp(S*0.12,4,14), 97);
-  p.surface      = hslToHex(H, clamp(S*0.08,3,10), 99.2);
-  p.border       = hslToHex(H, clamp(S*0.18,6,20), 88);
-  p.textPrimary  = hslToHex(H, clamp(S*0.15,4,14), 14);
-  p.textSecondary= hslToHex(H, clamp(S*0.10,3,10), 42);
-  p.buttonBg     = hslToHex(H, S, L);
-  p.buttonHover  = hslToHex(...mix(H,S,L,'black',0.16));
-  p.buttonActive = hslToHex(...mix(H,S,L,'black',0.30));
-  p.buttonDisabled = hslToHex(H, 6, 82);
-  p.link         = L>60 ? hslToHex(...mix(H,S,L,'black',0.20)) : hslToHex(H,S,L);
-  p.focusRing    = hslToHex(H, clamp(S,55,90), clamp(L,45,60));
-  p.shadow       = hslToRgba(...mix(H,S,L,'black',0.65), 0.22);
-  // status hues stay conventional; saturation borrows from base for cohesion
-  const statSat = clamp(S,58,82);
-  p.success = hslToHex(142, statSat, 38);
-  p.warning = hslToHex(38, statSat, 50);
-  p.error   = hslToHex(4, statSat, 50);
-  p.info    = hslToHex(208, statSat, 48);
+  if(!dark){
+    p.background   = hslToHex(H, clamp(S*0.12,4,14), 97);
+    p.surface      = hslToHex(H, clamp(S*0.08,3,10), 99.2);
+    p.border       = hslToHex(H, clamp(S*0.18,6,20), 88);
+    p.textPrimary  = hslToHex(H, clamp(S*0.15,4,14), 14);
+    p.textSecondary= hslToHex(H, clamp(S*0.10,3,10), 42);
+    p.buttonBg     = hslToHex(H, S, L);
+    p.buttonHover  = hslToHex(...mix(H,S,L,'black',0.16));
+    p.buttonActive = hslToHex(...mix(H,S,L,'black',0.30));
+    p.buttonDisabled = hslToHex(H, 6, 82);
+    p.link         = L>60 ? hslToHex(...mix(H,S,L,'black',0.20)) : hslToHex(H,S,L);
+    p.focusRing    = hslToHex(H, clamp(S,55,90), clamp(L,45,60));
+    p.shadowRGB    = hslToRgb(...mix(H,S,L,'black',0.65)).join(',');
+    p.shadow       = `rgba(${p.shadowRGB},0.22)`;
+    const statSat = clamp(S,58,82);
+    p.success = hslToHex(142, statSat, 38);
+    p.warning = hslToHex(38, statSat, 50);
+    p.error   = hslToHex(4, statSat, 50);
+    p.info    = hslToHex(208, statSat, 48);
+    p.buttonTextOnBg = (L>62) ? '#151515' : '#ffffff';
+  } else {
+    p.background   = hslToHex(H, clamp(S*0.25,10,26), 9);
+    p.surface      = hslToHex(H, clamp(S*0.22,9,22), 14);
+    p.border       = hslToHex(H, clamp(S*0.20,8,20), 26);
+    p.textPrimary  = hslToHex(H, clamp(S*0.08,2,8), 95);
+    p.textSecondary= hslToHex(H, clamp(S*0.10,3,10), 66);
+    const btnL = clamp(L, 48, 68);
+    p.buttonBg     = hslToHex(H, clamp(S,50,90), btnL);
+    p.buttonHover  = hslToHex(...mix(H, clamp(S,50,90), btnL, 'white', 0.14));
+    p.buttonActive = hslToHex(...mix(H, clamp(S,50,90), btnL, 'white', 0.26));
+    p.buttonDisabled = hslToHex(H, 8, 24);
+    p.link         = hslToHex(H, clamp(S,55,90), clamp(L,55,72));
+    p.focusRing    = hslToHex(H, clamp(S,55,90), clamp(L,55,70));
+    p.shadowRGB    = '0,0,0';
+    p.shadow       = `rgba(0,0,0,0.45)`;
+    const statSat = clamp(S,55,80);
+    p.success = hslToHex(142, statSat, 56);
+    p.warning = hslToHex(38, statSat, 62);
+    p.error   = hslToHex(4, statSat, 62);
+    p.info    = hslToHex(208, statSat, 62);
+    p.buttonTextOnBg = '#111111';
+  }
   return p;
 }
 
@@ -765,7 +936,7 @@ function applyMock(p){
 
   const btn = document.getElementById('mockBtnPrimary');
   btn.style.background = p.buttonBg;
-  btn.style.color = (L>62) ? '#151515' : '#fff';
+  btn.style.color = p.buttonTextOnBg;
   btn.onmouseenter = ()=>{btn.style.background=p.buttonHover;};
   btn.onmouseleave = ()=>{btn.style.background=p.buttonBg;};
   btn.onmousedown = ()=>{btn.style.background=p.buttonActive;};
@@ -796,6 +967,180 @@ function applyMock(p){
   document.getElementById('mockDot').style.background = p.info;
   document.getElementById('mockNotifText').style.color = p.textSecondary;
 }
+
+let isDark = false;
+const modeLightBtn = document.getElementById('modeLight');
+const modeDarkBtn = document.getElementById('modeDark');
+modeLightBtn.addEventListener('click', ()=>{isDark=false; modeLightBtn.classList.add('active'); modeDarkBtn.classList.remove('active'); render();});
+modeDarkBtn.addEventListener('click', ()=>{isDark=true; modeDarkBtn.classList.add('active'); modeLightBtn.classList.remove('active'); render();});
+
+function buildElevationScale(p){
+  const row = document.getElementById('elevRow');
+  row.style.background = p.background;
+  row.innerHTML = '';
+  const levels = [
+    ['sm', `0 1px 2px rgba(${p.shadowRGB},0.14)`],
+    ['md', `0 6px 14px rgba(${p.shadowRGB},0.18)`],
+    ['lg', `0 14px 28px rgba(${p.shadowRGB},0.22)`],
+    ['xl', `0 26px 48px rgba(${p.shadowRGB},0.28)`],
+  ];
+  levels.forEach(([name,shadow])=>{
+    const box = document.createElement('div');
+    box.className = 'elev-box';
+    box.style.background = p.surface;
+    box.style.boxShadow = shadow;
+    box.style.color = p.textSecondary;
+    box.style.border = `1px solid ${p.border}`;
+    box.textContent = name;
+    row.appendChild(box);
+  });
+}
+
+function computeGradients(){
+  const tint = hslToHex(...mix(H,S,L,'white',0.55));
+  const shade = hslToHex(...mix(H,S,L,'black',0.35));
+  const compl = hslToHex(((H+180)%360), clamp(S,55,85), L);
+  const analog = hslToHex(((H+35)%360), clamp(S,55,85), L);
+  const darkShadow = hslToHex(...mix(H,S,L,'black',0.7));
+  return [
+    {
+      name:'Brand', use:'Hero backgrounds, section dividers — quiet, on-brand.',
+      css:`linear-gradient(135deg, ${tint}, ${shade})`
+    },
+    {
+      name:'Accent', use:'Promo banners, feature callouts — more energy.',
+      css:`linear-gradient(120deg, ${hslToHex(H,S,L)}, ${analog})`
+    },
+    {
+      name:'Button', use:'Primary CTAs — subtle depth instead of a flat fill.',
+      css:`linear-gradient(180deg, ${hslToHex(...mix(H,S,L,'white',0.12))}, ${hslToHex(...mix(H,S,L,'black',0.14))})`
+    },
+    {
+      name:'Overlay / Scrim', use:'Over photos — keeps captions and text readable.',
+      css:`linear-gradient(0deg, rgba(${hslToRgb(...mix(H,S,L,'black',0.75))},0.88) 0%, rgba(${hslToRgb(...mix(H,S,L,'black',0.75))},0) 65%)`
+    },
+  ];
+}
+
+function buildGradients(){
+  const grid = document.getElementById('gradientGrid');
+  grid.innerHTML = '';
+  computeGradients().forEach(g=>{
+    const card = document.createElement('div');
+    card.className = 'gradient-card';
+    const isOverlay = g.name.includes('Overlay');
+    const swatchStyle = isOverlay
+      ? `background-color:#8a8478; background-image:${g.css};`
+      : `background:${g.css};`;
+    card.innerHTML = `
+      <div class="gradient-swatch" style="${swatchStyle}">
+        ${isOverlay ? '<span class="overlay-demo-text">Caption stays legible</span>' : ''}
+      </div>
+      <div class="gradient-meta">
+        <div class="gname">${g.name}</div>
+        <div class="guse">${g.use}</div>
+        <code>background: ${g.css};</code>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function buildExportCode(pLight, pDark){
+  const baseHex = hslToHex(H,S,L);
+  const cssLines = [
+`<span class="ctok">:root</span> {`,
+`  <span class="vtok">--color-brand</span>: ${baseHex};`,
+`  <span class="vtok">--color-background</span>: ${pLight.background};`,
+`  <span class="vtok">--color-surface</span>: ${pLight.surface};`,
+`  <span class="vtok">--color-border</span>: ${pLight.border};`,
+`  <span class="vtok">--color-text</span>: ${pLight.textPrimary};`,
+`  <span class="vtok">--color-text-secondary</span>: ${pLight.textSecondary};`,
+`  <span class="vtok">--color-button</span>: ${pLight.buttonBg};`,
+`  <span class="vtok">--color-button-hover</span>: ${pLight.buttonHover};`,
+`  <span class="vtok">--color-button-active</span>: ${pLight.buttonActive};`,
+`  <span class="vtok">--color-link</span>: ${pLight.link};`,
+`  <span class="vtok">--color-focus-ring</span>: ${pLight.focusRing};`,
+`  <span class="vtok">--color-success</span>: ${pLight.success};`,
+`  <span class="vtok">--color-warning</span>: ${pLight.warning};`,
+`  <span class="vtok">--color-error</span>: ${pLight.error};`,
+`  <span class="vtok">--color-info</span>: ${pLight.info};`,
+`  <span class="vtok">--shadow-sm</span>: 0 1px 2px rgba(${pLight.shadowRGB},0.14);`,
+`  <span class="vtok">--shadow-md</span>: 0 6px 14px rgba(${pLight.shadowRGB},0.18);`,
+`  <span class="vtok">--shadow-lg</span>: 0 14px 28px rgba(${pLight.shadowRGB},0.22);`,
+`}`,
+``,
+`<span class="ctok">[data-theme="dark"]</span> {`,
+`  <span class="vtok">--color-background</span>: ${pDark.background};`,
+`  <span class="vtok">--color-surface</span>: ${pDark.surface};`,
+`  <span class="vtok">--color-border</span>: ${pDark.border};`,
+`  <span class="vtok">--color-text</span>: ${pDark.textPrimary};`,
+`  <span class="vtok">--color-text-secondary</span>: ${pDark.textSecondary};`,
+`  <span class="vtok">--color-button</span>: ${pDark.buttonBg};`,
+`  <span class="vtok">--color-button-hover</span>: ${pDark.buttonHover};`,
+`  <span class="vtok">--color-button-active</span>: ${pDark.buttonActive};`,
+`  <span class="vtok">--color-link</span>: ${pDark.link};`,
+`  <span class="vtok">--color-focus-ring</span>: ${pDark.focusRing};`,
+`  <span class="vtok">--color-success</span>: ${pDark.success};`,
+`  <span class="vtok">--color-warning</span>: ${pDark.warning};`,
+`  <span class="vtok">--color-error</span>: ${pDark.error};`,
+`  <span class="vtok">--color-info</span>: ${pDark.info};`,
+`}`,
+  ];
+  document.getElementById('cssCode').innerHTML = cssLines.join('\n');
+
+  const twLines = [
+`<span class="ctok">module.exports</span> = {`,
+`  theme: {`,
+`    extend: {`,
+`      colors: {`,
+`        brand: {`,
+`          DEFAULT: <span class="vtok">'${baseHex}'</span>,`,
+`          hover: <span class="vtok">'${pLight.buttonHover}'</span>,`,
+`          active: <span class="vtok">'${pLight.buttonActive}'</span>,`,
+`        },`,
+`        background: <span class="vtok">'${pLight.background}'</span>,`,
+`        surface: <span class="vtok">'${pLight.surface}'</span>,`,
+`        border: <span class="vtok">'${pLight.border}'</span>,`,
+`        success: <span class="vtok">'${pLight.success}'</span>,`,
+`        warning: <span class="vtok">'${pLight.warning}'</span>,`,
+`        error: <span class="vtok">'${pLight.error}'</span>,`,
+`        info: <span class="vtok">'${pLight.info}'</span>,`,
+`      },`,
+`      boxShadow: {`,
+`        sm: <span class="vtok">'0 1px 2px rgba(${pLight.shadowRGB},0.14)'</span>,`,
+`        md: <span class="vtok">'0 6px 14px rgba(${pLight.shadowRGB},0.18)'</span>,`,
+`        lg: <span class="vtok">'0 14px 28px rgba(${pLight.shadowRGB},0.22)'</span>,`,
+`      },`,
+`    },`,
+`  },`,
+`};`,
+  ];
+  document.getElementById('twCode').innerHTML = twLines.join('\n');
+}
+
+const tabCss = document.getElementById('tabCss');
+const tabTw = document.getElementById('tabTailwind');
+tabCss.addEventListener('click', ()=>{
+  tabCss.classList.add('active'); tabTw.classList.remove('active');
+  document.getElementById('cssBlock').style.display='block';
+  document.getElementById('twBlock').style.display='none';
+});
+tabTw.addEventListener('click', ()=>{
+  tabTw.classList.add('active'); tabCss.classList.remove('active');
+  document.getElementById('twBlock').style.display='block';
+  document.getElementById('cssBlock').style.display='none';
+});
+function copyText(elId, btnId){
+  const text = document.getElementById(elId).innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById(btnId);
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(()=>{btn.textContent = original;}, 1400);
+  });
+}
+document.getElementById('copyCss').addEventListener('click', ()=>copyText('cssCode','copyCss'));
+document.getElementById('copyTw').addEventListener('click', ()=>copyText('twCode','copyTw'));
 
 function render(){
   const baseHex = hslToHex(H,S,L);
@@ -848,10 +1193,15 @@ function render(){
   badgeW.className = 'badge ' + (rWhite>=4.5 ? 'pass':'fail');
   badgeB.className = 'badge ' + (rBlack>=4.5 ? 'pass':'fail');
 
-  // semantic UI palette — fully automatic from H/S/L
-  const semantic = computeSemanticPalette();
-  buildRoleGrid(semantic);
-  applyMock(semantic);
+  // semantic UI palette — fully automatic from H/S/L, toggles light/dark
+  const semanticLight = computeSemanticPalette(false);
+  const semanticDark = computeSemanticPalette(true);
+  const active = isDark ? semanticDark : semanticLight;
+  buildRoleGrid(active);
+  applyMock(active);
+  buildElevationScale(active);
+  buildGradients();
+  buildExportCode(semanticLight, semanticDark);
 }
 
 updateKnob();
