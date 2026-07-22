@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Color Theory — A Working Reference</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F6F2;
+    --surface:#FFFFFF;
+    --ink:#1B1A17;
+    --ink-soft:#726D62;
+    --line:#E6E2D8;
+    --line-soft:#EFECE4;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Public Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 24px;}
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    padding:56px 24px 40px;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(30px,5vw,48px);
+    line-height:1.08;
+    margin:0 0 12px;
+    letter-spacing:-.01em;
+  }
+  header.hero p.sub{
+    max-width:520px;
+    margin:0 auto;
+    color:var(--ink-soft);
+    font-size:15.5px;
+    line-height:1.6;
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{
+    max-width:960px;
+    margin:0 auto;
+    padding:52px 24px;
+    border-bottom:1px solid var(--line);
+  }
+  section:last-of-type{border-bottom:none;}
+  .num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    letter-spacing:.1em;
+  }
+  h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:26px;
+    margin:6px 0 10px;
+  }
+  .lede{
+    color:var(--ink-soft);
+    font-size:15px;
+    line-height:1.65;
+    max-width:640px;
+    margin:0 0 28px;
+  }
+
+  /* ---------- WHEEL + CONTROLS ---------- */
+  .studio{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:40px;
+    align-items:center;
+  }
+  @media(max-width:720px){ .studio{grid-template-columns:1fr; justify-items:center;} }
+
+  #wheel-wrap{
+    position:relative;
+    width:240px;
+    height:240px;
+    flex:none;
+  }
+  #wheel{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    cursor:crosshair;
+    box-shadow:0 0 0 1px var(--line), inset 0 0 22px rgba(0,0,0,0.06);
+  }
+  #knob{
+    position:absolute;
+    width:20px;height:20px;
+    border-radius:50%;
+    border:3px solid white;
+    box-shadow:0 0 0 1.5px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.25);
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+  }
+  #wheel-center{
+    position:absolute; left:50%; top:50%;
+    width:96px; height:96px;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:var(--bg);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 0 1px var(--line);
+    pointer-events:none;
+  }
+  #hue-readout{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    text-align:center;
+    color:var(--ink);
+  }
+  #hue-readout span{display:block; font-size:20px; font-weight:600;}
+
+  .sliders{width:100%; max-width:380px;}
+  .slider-row{margin-bottom:20px;}
+  .slider-row label{
+    display:flex; justify-content:space-between;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .slider-row label b{color:var(--ink); font-weight:600;}
+  input[type=range]{
+    -webkit-appearance:none;
+    width:100%; height:10px;
+    border-radius:6px;
+    outline:none;
+    background:#ddd;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:20px;height:20px;border-radius:50%;
+    background:white;
+    box-shadow:0 0 0 1.5px rgba(0,0,0,0.35), 0 2px 5px rgba(0,0,0,0.2);
+    cursor:pointer;
+  }
+  #satSlider{background:linear-gradient(90deg, #bbb, var(--base-color, hsl(220,80%,55%)));}
+  #lightSlider{background:linear-gradient(90deg, #111, var(--base-color, hsl(220,80%,55%)), #fff);}
+
+  .base-chip{
+    display:flex; align-items:center; gap:12px;
+    padding:12px 14px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    margin-top:6px;
+  }
+  .base-chip .swatch{width:34px; height:34px; border-radius:8px; flex:none; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.08);}
+  .base-chip .code{font-family:'JetBrains Mono', monospace; font-size:12.5px; color:var(--ink-soft); line-height:1.5;}
+  .base-chip .code b{color:var(--ink);}
+
+  /* ---------- STRIPS (tints/shades/tones) ---------- */
+  .strip-block{margin-bottom:26px;}
+  .strip-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px; color:var(--ink-soft);
+    margin-bottom:8px;
+    display:flex; justify-content:space-between;
+  }
+  .strip{
+    display:grid;
+    grid-auto-flow:column;
+    grid-auto-columns:1fr;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 0 0 1px var(--line);
+    height:56px;
+  }
+  .strip .cell{
+    position:relative;
+    display:flex; align-items:flex-end; justify-content:center;
+    padding-bottom:6px;
+  }
+  .strip .cell span{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px;
+    opacity:0;
+    transition:opacity .15s;
+  }
+  .strip .cell:hover span{opacity:1;}
+
+  /* ---------- HARMONY GRID ---------- */
+  .harmony-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  @media(max-width:640px){ .harmony-grid{grid-template-columns:1fr;} }
+  .harmony-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+  }
+  .harmony-card h3{
+    font-family:'Fraunces', serif;
+    font-size:16px; font-weight:600;
+    margin:0 0 4px;
+  }
+  .harmony-card p{
+    font-size:12.5px; color:var(--ink-soft);
+    margin:0 0 12px; line-height:1.5;
+  }
+  .harmony-swatches{display:flex; gap:6px; height:44px;}
+  .harmony-swatches div{flex:1; border-radius:7px; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06);}
+
+  /* ---------- 60-30-10 ---------- */
+  .ratio-bar{
+    display:flex; height:64px; border-radius:12px; overflow:hidden;
+    box-shadow:0 0 0 1px var(--line);
+    margin-bottom:18px;
+  }
+  .ratio-bar div{display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono', monospace; font-size:12px;}
+  .ratio-legend{display:flex; gap:22px; flex-wrap:wrap; font-size:13.5px; color:var(--ink-soft);}
+  .ratio-legend b{color:var(--ink);}
+
+  /* ---------- CONTRAST ---------- */
+  .contrast-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-bottom:20px;
+  }
+  @media(max-width:640px){ .contrast-grid{grid-template-columns:1fr;} }
+  .contrast-card{
+    border-radius:var(--radius);
+    padding:22px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    min-height:120px;
+    box-shadow:0 0 0 1px var(--line);
+  }
+  .contrast-card .sample{font-family:'Fraunces', serif; font-size:20px; font-weight:600;}
+  .contrast-card .meta{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:14px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+  }
+  .badge{
+    padding:3px 8px; border-radius:20px; font-size:11px; font-weight:600;
+  }
+  .pass{background:#DCEFDD; color:#1E5B24;}
+  .fail{background:#F6DEDA; color:#8C2A1B;}
+
+  /* ---------- CHEAT SHEET ---------- */
+  .cheat{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px 30px;
+  }
+  @media(max-width:640px){ .cheat{grid-template-columns:1fr;} }
+  .cheat dt{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px; color:var(--ink-soft); letter-spacing:.03em;
+    margin-bottom:2px;
+  }
+  .cheat dd{margin:0 0 14px; font-size:14px; line-height:1.5;}
+
+  footer{
+    text-align:center;
+    padding:30px 24px 0;
+    color:var(--ink-soft);
+    font-size:12px;
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  /* ---------- SEMANTIC ROLE GRID ---------- */
+  .role-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(210px,1fr));
+    gap:12px;
+    margin-bottom:36px;
+  }
+  .role-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px;
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .role-card .rswatch{
+    width:38px; height:38px; border-radius:9px; flex:none;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.08);
+  }
+  .role-card .rtext{min-width:0;}
+  .role-card .rname{font-size:13px; font-weight:600; margin-bottom:2px;}
+  .role-card .rhex{font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--ink-soft); margin-bottom:4px;}
+  .role-card .ruse{font-size:11.5px; color:var(--ink-soft); line-height:1.4;}
+
+  /* ---------- LIVE MOCK PREVIEW ---------- */
+  .mock-frame{
+    border-radius:18px;
+    border:1px solid var(--line);
+    padding:28px;
+    transition:background .1s;
+  }
+  .mock-card{
+    border-radius:14px;
+    padding:22px;
+    max-width:420px;
+    transition:background .1s, box-shadow .1s;
+  }
+  .mock-card h4{
+    font-family:'Fraunces', serif;
+    font-size:18px; margin:0 0 6px;
+  }
+  .mock-card p.desc{
+    font-size:13px; margin:0 0 16px; line-height:1.5;
+  }
+  .mock-badges{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;}
+  .mock-badge{
+    font-size:11px; font-weight:600;
+    padding:4px 10px; border-radius:20px;
+    font-family:'Public Sans', sans-serif;
+  }
+  .mock-row{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .mock-btn{
+    border:none; border-radius:9px;
+    padding:10px 18px;
+    font-size:13.5px; font-weight:600;
+    font-family:'Public Sans', sans-serif;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .mock-btn.disabled{cursor:not-allowed;}
+  .mock-input{
+    border-radius:9px;
+    padding:9px 12px;
+    font-size:13px;
+    font-family:'Public Sans', sans-serif;
+    outline:none;
+    width:150px;
+  }
+  .mock-link{font-size:13px; font-weight:600; text-decoration:underline; cursor:pointer;}
+  .mock-notif{
+    display:flex; align-items:center; gap:8px;
+    font-size:12px; margin-top:16px;
+  }
+  .mock-dot{width:8px; height:8px; border-radius:50%; flex:none;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Color Theory — Working Reference</div>
+  <h1>One wheel. Every rule.</h1>
+  <p class="sub">Drag the wheel to set a base hue. Everything below — tints, shades, harmonies, and a full website palette (buttons, hover, shadows, warnings, notifications) — is generated automatically from that one color.</p>
+</header>
+
+<section id="wheel-section">
+  <div class="num">01</div>
+  <h2>Pick a base hue</h2>
+  <p class="lede">Hue is the pure color itself — where it sits on the wheel, measured in degrees (0–360°). Saturation is its intensity (gray → vivid). Lightness is how close it sits to black or white. Every color you'll ever mix is just these three dials.</p>
+
+  <div class="studio">
+    <div id="wheel-wrap">
+      <canvas id="wheel" width="240" height="240"></canvas>
+      <div id="wheel-center"><div id="hue-readout"><span id="hueVal">220°</span>hue</div></div>
+      <div id="knob"></div>
+    </div>
+
+    <div class="sliders">
+      <div class="slider-row">
+        <label>Saturation <b id="satLabel">80%</b></label>
+        <input type="range" id="satSlider" min="0" max="100" value="80">
+      </div>
+      <div class="slider-row">
+        <label>Lightness <b id="lightLabel">55%</b></label>
+        <input type="range" id="lightSlider" min="0" max="100" value="55">
+      </div>
+      <div class="base-chip">
+        <div class="swatch" id="baseSwatch"></div>
+        <div class="code">
+          <div><b id="hexOut">#2E6EDB</b></div>
+          <div id="hslOut">hsl(220, 80%, 55%)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tints-section">
+  <div class="num">02</div>
+  <h2>Tints, shades & tones</h2>
+  <p class="lede">Three ways to extend one color into a usable range, instead of reaching for a new hue every time you need something lighter or more muted.</p>
+
+  <div class="strip-block">
+    <div class="strip-label"><span><b style="color:var(--ink)">Tints</b> — mix with white → lighter, airier. Good for backgrounds, hover states.</span></div>
+    <div class="strip" id="tintStrip"></div>
+  </div>
+  <div class="strip-block">
+    <div class="strip-label"><span><b style="color:var(--ink)">Shades</b> — mix with black → deeper, heavier. Good for text, dark-mode surfaces.</span></div>
+    <div class="strip" id="shadeStrip"></div>
+  </div>
+  <div class="strip-block">
+    <div class="strip-label"><span><b style="color:var(--ink)">Tones</b> — mix with gray → muted, quieter. Good for large surfaces that shouldn't shout.</span></div>
+    <div class="strip" id="toneStrip"></div>
+  </div>
+</section>
+
+<section id="harmony-section">
+  <div class="num">03</div>
+  <h2>Color harmonies</h2>
+  <p class="lede">Where you place supporting colors on the wheel relative to your base — this is what most "how do I pick colors that go together" questions are really asking.</p>
+
+  <div class="harmony-grid">
+    <div class="harmony-card">
+      <h3>Complementary</h3>
+      <p>Base + its opposite (180° away). Maximum contrast, high energy. Use one as the dominant color and the other only as a small accent — never 50/50.</p>
+      <div class="harmony-swatches" id="h-comp"></div>
+    </div>
+    <div class="harmony-card">
+      <h3>Analogous</h3>
+      <p>Base + neighbors (±30°). Naturally harmonious, low tension — how gradients and calm palettes are built. Pick one to dominate.</p>
+      <div class="harmony-swatches" id="h-analog"></div>
+    </div>
+    <div class="harmony-card">
+      <h3>Split-complementary</h3>
+      <p>Base + the two colors beside its complement (150°/210°). Same visual punch as complementary, gentler to look at.</p>
+      <div class="harmony-swatches" id="h-split"></div>
+    </div>
+    <div class="harmony-card">
+      <h3>Triadic</h3>
+      <p>Three colors evenly spaced (120° apart). Vibrant and balanced; let one lead and use the other two as accents, not equals.</p>
+      <div class="harmony-swatches" id="h-triad"></div>
+    </div>
+    <div class="harmony-card">
+      <h3>Tetradic (square)</h3>
+      <p>Four colors, 90° apart. Rich but risky — needs one clear dominant color and one dominant temperature or it turns to noise.</p>
+      <div class="harmony-swatches" id="h-tetrad"></div>
+    </div>
+    <div class="harmony-card">
+      <h3>Monochromatic</h3>
+      <p>One hue, varied lightness only. Zero risk, guaranteed cohesion — the safest professional default when in doubt.</p>
+      <div class="harmony-swatches" id="h-mono"></div>
+    </div>
+  </div>
+</section>
+
+<section id="ratio-section">
+  <div class="num">04</div>
+  <h2>Supporting colors — the 60/30/10 rule</h2>
+  <p class="lede">Harmony tells you <i>which</i> colors go together. Ratio tells you how much of each to actually use. Pick one dominant, one secondary, one accent — and keep them unequal.</p>
+
+  <div class="ratio-bar" id="ratioBar">
+    <div style="flex:6" id="r60">60%</div>
+    <div style="flex:3" id="r30">30%</div>
+    <div style="flex:1" id="r10">10%</div>
+  </div>
+  <div class="ratio-legend">
+    <div><b>60% Dominant</b> — background, primary surface. Usually your base color as a tint or a neutral.</div>
+    <div><b>30% Secondary</b> — supporting sections, cards, secondary UI. An analogous or muted tone.</div>
+    <div><b>10% Accent</b> — buttons, links, alerts. Your highest-contrast color, used sparingly on purpose.</div>
+  </div>
+</section>
+
+<section id="semantic-section">
+  <div class="num">05</div>
+  <h2>Automatic UI palette</h2>
+  <p class="lede">This is the part that used to take guesswork: every role a real website needs — background, buttons, hover, shadows, warnings, notifications — generated automatically from your base color. Nothing to pick, just what you dragged on the wheel above.</p>
+
+  <div class="role-grid" id="roleGrid"></div>
+
+  <p class="lede" style="margin-bottom:16px;">And here's that palette actually applied, live:</p>
+  <div class="mock-frame" id="mockFrame">
+    <div class="mock-card" id="mockCard">
+      <h4 id="mockTitle" style="color:#111;">Project Nova</h4>
+      <p class="desc" id="mockDesc" style="color:#555;">This card, button, and badges are built entirely from your base hue — drag the wheel above and watch them shift.</p>
+      <div class="mock-badges">
+        <span class="mock-badge" id="badgeSuccess">Success</span>
+        <span class="mock-badge" id="badgeWarning">Warning</span>
+        <span class="mock-badge" id="badgeError">Error</span>
+        <span class="mock-badge" id="badgeInfo">Info</span>
+      </div>
+      <div class="mock-row">
+        <button class="mock-btn" id="mockBtnPrimary">Primary action</button>
+        <button class="mock-btn disabled" id="mockBtnDisabled">Disabled</button>
+        <input class="mock-input" id="mockInput" placeholder="Focus me" type="text">
+        <span class="mock-link" id="mockLink">Learn more</span>
+      </div>
+      <div class="mock-notif" id="mockNotif">
+        <span class="mock-dot" id="mockDot"></span>
+        <span id="mockNotifText">3 new notifications</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contrast-section">
+  <div class="num">06</div>
+  <h2>Contrast & legibility</h2>
+  <p class="lede">A beautiful palette still needs to be readable. WCAG sets minimum contrast ratios between text and its background: <b>4.5:1</b> for normal text (AA), <b>3:1</b> for large text, <b>7:1</b> for AAA. This checks your base color against black and white text live.</p>
+
+  <div class="contrast-grid">
+    <div class="contrast-card" id="cardWhiteText">
+      <div class="sample" style="color:white;">Aa — text on base</div>
+      <div class="meta">
+        <span style="color:white;">White text</span>
+        <span id="ratioWhite" class="badge">4.5:1</span>
+      </div>
+    </div>
+    <div class="contrast-card" id="cardBlackText">
+      <div class="sample" style="color:#111;">Aa — text on base</div>
+      <div class="meta">
+        <span style="color:#111;">Black text</span>
+        <span id="ratioBlack" class="badge">4.5:1</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cheat-section">
+  <div class="num">07</div>
+  <h2>Quick cheat sheet</h2>
+  <dl class="cheat">
+    <dt>Hue</dt><dd>The pure color, 0–360° on the wheel (red → yellow → green → blue → red).</dd>
+    <dt>Saturation</dt><dd>Intensity of the hue — 0% is gray, 100% is fully vivid.</dd>
+    <dt>Lightness</dt><dd>Position between black (0%) and white (100%).</dd>
+    <dt>Tint</dt><dd>Hue + white. Lighter, softer, airier.</dd>
+    <dt>Shade</dt><dd>Hue + black. Deeper, heavier, more serious.</dd>
+    <dt>Tone</dt><dd>Hue + gray. Muted, sophisticated, less saturated.</dd>
+    <dt>Complementary</dt><dd>Opposite hues (180°). Max contrast — use unevenly.</dd>
+    <dt>Analogous</dt><dd>Neighboring hues (±30°). Calm, natural cohesion.</dd>
+    <dt>Triadic</dt><dd>Three hues 120° apart. Balanced and vibrant.</dd>
+    <dt>Split-complementary</dt><dd>Base + both neighbors of its complement. Contrast, less tension.</dd>
+    <dt>Monochromatic</dt><dd>One hue, many lightness/saturation steps. Safest default.</dd>
+    <dt>60/30/10</dt><dd>Dominant / secondary / accent ratio for any palette.</dd>
+    <dt>Background vs. Surface</dt><dd>Background is the page canvas (near-white/neutral tint). Surface is what sits on it — cards, panels — usually a touch lighter for separation.</dd>
+    <dt>Hover / Active states</dt><dd>Same hue, darker shade. ~12% darker for hover, ~22% for active/pressed — never a different color.</dd>
+    <dt>Shadows</dt><dd>Never pure black. A low-opacity, hue-tinted dark shade of your base reads as "elevation," not a gray smudge.</dd>
+    <dt>Status colors</dt><dd>Success (green), Warning (amber), Error (red), Info (blue) stay on recognizable hues by convention — but tune their saturation to match your base so they feel native to the palette, not bolted on.</dd>
+  </dl>
+</section>
+
+<footer>Drag the wheel — every section above is live.</footer>
+
+<script>
+let H = 220, S = 80, L = 55;
+
+const canvas = document.getElementById('wheel');
+const ctx = canvas.getContext('2d');
+const size = 240, cx = size/2, cy = size/2, radius = size/2;
+
+function drawWheel(){
+  const img = ctx.createImageData(size, size);
+  for(let y=0;y<size;y++){
+    for(let x=0;x<size;x++){
+      const dx = x-cx, dy = y-cy;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      const idx = (y*size+x)*4;
+      if(dist<=radius){
+        let angle = Math.atan2(dx,-dy)*180/Math.PI;
+        if(angle<0) angle+=360;
+        const sat = Math.min(100,(dist/radius)*100);
+        const [r,g,b] = hslToRgb(angle,sat,55);
+        img.data[idx]=r; img.data[idx+1]=g; img.data[idx+2]=b; img.data[idx+3]=255;
+      } else {
+        img.data[idx+3]=0;
+      }
+    }
+  }
+  ctx.putImageData(img,0,0);
+}
+drawWheel();
+
+function hslToRgb(h,s,l){
+  s/=100; l/=100;
+  const k = n => (n + h/30) % 12;
+  const a = s * Math.min(l, 1-l);
+  const f = n => l - a*Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n),1)));
+  return [Math.round(f(0)*255), Math.round(f(8)*255), Math.round(f(4)*255)];
+}
+function hslToHex(h,s,l){
+  const [r,g,b] = hslToRgb(h,s,l);
+  return '#' + [r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+}
+function mix(h,s,l,target,amount){
+  // amount 0-1, target 'white'|'black'|'gray'
+  if(target==='white') return [h, s*(1-amount), l + (100-l)*amount];
+  if(target==='black') return [h, s*(1-amount*0.3), l*(1-amount)];
+  if(target==='gray')  return [h, s*(1-amount), l + (50-l)*amount*0.5];
+}
+
+const knob = document.getElementById('knob');
+const satSlider = document.getElementById('satSlider');
+const lightSlider = document.getElementById('lightSlider');
+
+function setHue(newH, fromDrag){
+  H = ((newH % 360)+360)%360;
+  updateKnob();
+  render();
+}
+function updateKnob(){
+  const rad = H*Math.PI/180;
+  const r = radius * (S/100) * 0.94 + (radius*0.06);
+  const x = cx + r*Math.sin(rad);
+  const y = cy - r*Math.cos(rad);
+  const rect = canvas.getBoundingClientRect();
+  knob.style.left = x + 'px';
+  knob.style.top = y + 'px';
+}
+
+let dragging = false;
+function handlePointer(e){
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const x = (clientX - rect.left) * (size/rect.width) - cx;
+  const y = (clientY - rect.top) * (size/rect.height) - cy;
+  let angle = Math.atan2(x,-y)*180/Math.PI;
+  if(angle<0) angle+=360;
+  setHue(angle);
+}
+canvas.addEventListener('mousedown', e=>{dragging=true; handlePointer(e);});
+window.addEventListener('mousemove', e=>{if(dragging) handlePointer(e);});
+window.addEventListener('mouseup', ()=>dragging=false);
+canvas.addEventListener('touchstart', e=>{dragging=true; handlePointer(e);});
+window.addEventListener('touchmove', e=>{if(dragging){handlePointer(e); e.preventDefault();}}, {passive:false});
+window.addEventListener('touchend', ()=>dragging=false);
+
+satSlider.addEventListener('input', e=>{S=+e.target.value; updateKnob(); render();});
+lightSlider.addEventListener('input', e=>{L=+e.target.value; render();});
+
+function luminance(hex){
+  const c = hex.replace('#','');
+  const r = parseInt(c.substr(0,2),16)/255;
+  const g = parseInt(c.substr(2,2),16)/255;
+  const b = parseInt(c.substr(4,2),16)/255;
+  const lin = v => v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4);
+  return 0.2126*lin(r)+0.7152*lin(g)+0.0722*lin(b);
+}
+function hslToRgba(h,s,l,a){
+  const [r,g,b] = hslToRgb(h,s,l);
+  return `rgba(${r},${g},${b},${a})`;
+}
+function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
+
+function contrastRatio(hex1,hex2){
+  const l1 = luminance(hex1)+0.05, l2 = luminance(hex2)+0.05;
+  return l1>l2 ? l1/l2 : l2/l1;
+}
+
+function buildStrip(el, target, steps){
+  el.innerHTML='';
+  for(let i=0;i<steps;i++){
+    const amount = i/(steps-1);
+    const [h,s,l] = mix(H,S,L,target,amount);
+    const hex = hslToHex(h,s,l);
+    const cell = document.createElement('div');
+    cell.className='cell';
+    cell.style.background = hex;
+    const textColor = l>55 ? '#111':'#fff';
+    cell.innerHTML = `<span style="color:${textColor}">${hex}</span>`;
+    el.appendChild(cell);
+  }
+}
+
+function buildHarmonySwatches(el, hues, sat, light){
+  el.innerHTML='';
+  hues.forEach(h=>{
+    const hex = hslToHex(((h%360)+360)%360, sat, light);
+    const d = document.createElement('div');
+    d.style.background = hex;
+    el.appendChild(d);
+  });
+}
+
+function computeSemanticPalette(){
+  const p = {};
+  p.background   = hslToHex(H, clamp(S*0.12,4,14), 97);
+  p.surface      = hslToHex(H, clamp(S*0.08,3,10), 99.2);
+  p.border       = hslToHex(H, clamp(S*0.18,6,20), 88);
+  p.textPrimary  = hslToHex(H, clamp(S*0.15,4,14), 14);
+  p.textSecondary= hslToHex(H, clamp(S*0.10,3,10), 42);
+  p.buttonBg     = hslToHex(H, S, L);
+  p.buttonHover  = hslToHex(...mix(H,S,L,'black',0.16));
+  p.buttonActive = hslToHex(...mix(H,S,L,'black',0.30));
+  p.buttonDisabled = hslToHex(H, 6, 82);
+  p.link         = L>60 ? hslToHex(...mix(H,S,L,'black',0.20)) : hslToHex(H,S,L);
+  p.focusRing    = hslToHex(H, clamp(S,55,90), clamp(L,45,60));
+  p.shadow       = hslToRgba(...mix(H,S,L,'black',0.65), 0.22);
+  // status hues stay conventional; saturation borrows from base for cohesion
+  const statSat = clamp(S,58,82);
+  p.success = hslToHex(142, statSat, 38);
+  p.warning = hslToHex(38, statSat, 50);
+  p.error   = hslToHex(4, statSat, 50);
+  p.info    = hslToHex(208, statSat, 48);
+  return p;
+}
+
+function buildRoleGrid(p){
+  const roles = [
+    ['background','Background','Page canvas — the base every other layer sits on.'],
+    ['surface','Surface / Card','Panels, cards, modals — one step off the background.'],
+    ['border','Border / Divider','Input outlines, dividers, table lines.'],
+    ['textPrimary','Text — Primary','Headings and body copy.'],
+    ['textSecondary','Text — Secondary','Captions, timestamps, helper text.'],
+    ['buttonBg','Primary Button','Main call-to-action.'],
+    ['buttonHover','Button — Hover','~16% darker on pointer-over.'],
+    ['buttonActive','Button — Active','~30% darker while pressed.'],
+    ['buttonDisabled','Button — Disabled','Desaturated, low-emphasis.'],
+    ['link','Link','Inline clickable text.'],
+    ['focusRing','Focus Ring','Keyboard-accessibility outline.'],
+    ['success','Success','Confirmations, completed states.'],
+    ['warning','Warning','Caution, needs-review states.'],
+    ['error','Error / Danger','Failures, destructive actions.'],
+    ['info','Info / Notification','Neutral alerts, badges, counters.'],
+  ];
+  const grid = document.getElementById('roleGrid');
+  grid.innerHTML = '';
+  roles.forEach(([key,name,use])=>{
+    const card = document.createElement('div');
+    card.className='role-card';
+    card.innerHTML = `<div class="rswatch" style="background:${p[key]}"></div>
+      <div class="rtext">
+        <div class="rname">${name}</div>
+        <div class="rhex">${p[key]}</div>
+        <div class="ruse">${use}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+  // shadow role card (rgba, shown separately since it's not a flat hex swatch)
+  const shadowCard = document.createElement('div');
+  shadowCard.className='role-card';
+  shadowCard.innerHTML = `<div class="rswatch" style="background:${p.background}; box-shadow:0 6px 14px ${p.shadow}"></div>
+    <div class="rtext">
+      <div class="rname">Shadow</div>
+      <div class="rhex">tinted, not black</div>
+      <div class="ruse">Elevation for cards, dropdowns, modals.</div>
+    </div>`;
+  grid.appendChild(shadowCard);
+}
+
+function applyMock(p){
+  document.getElementById('mockFrame').style.background = p.background;
+  const card = document.getElementById('mockCard');
+  card.style.background = p.surface;
+  card.style.boxShadow = `0 10px 26px ${p.shadow}`;
+  document.getElementById('mockTitle').style.color = p.textPrimary;
+  document.getElementById('mockDesc').style.color = p.textSecondary;
+
+  const btn = document.getElementById('mockBtnPrimary');
+  btn.style.background = p.buttonBg;
+  btn.style.color = (L>62) ? '#151515' : '#fff';
+  btn.onmouseenter = ()=>{btn.style.background=p.buttonHover;};
+  btn.onmouseleave = ()=>{btn.style.background=p.buttonBg;};
+  btn.onmousedown = ()=>{btn.style.background=p.buttonActive;};
+  btn.onmouseup = ()=>{btn.style.background=p.buttonHover;};
+
+  const dbtn = document.getElementById('mockBtnDisabled');
+  dbtn.style.background = p.buttonDisabled;
+  dbtn.style.color = '#9C9890';
+
+  const input = document.getElementById('mockInput');
+  input.style.background = p.surface;
+  input.style.border = `1px solid ${p.border}`;
+  input.style.color = p.textPrimary;
+  input.onfocus = ()=>{input.style.boxShadow = `0 0 0 3px ${p.focusRing}55`; input.style.border=`1px solid ${p.focusRing}`;};
+  input.onblur = ()=>{input.style.boxShadow='none'; input.style.border=`1px solid ${p.border}`;};
+
+  const link = document.getElementById('mockLink');
+  link.style.color = p.link;
+
+  const badgeMap = {badgeSuccess:['success', p.success],badgeWarning:['warning', p.warning],badgeError:['error', p.error],badgeInfo:['info', p.info]};
+  Object.entries(badgeMap).forEach(([id,[key,hex]])=>{
+    const el = document.getElementById(id);
+    el.style.background = hex + '22';
+    el.style.color = hex;
+  });
+
+  document.getElementById('mockCard').style.border = `1px solid ${p.border}`;
+  document.getElementById('mockDot').style.background = p.info;
+  document.getElementById('mockNotifText').style.color = p.textSecondary;
+}
+
+function render(){
+  const baseHex = hslToHex(H,S,L);
+  document.documentElement.style.setProperty('--base-color', baseHex);
+  document.getElementById('baseSwatch').style.background = baseHex;
+  document.getElementById('hexOut').textContent = baseHex;
+  document.getElementById('hslOut').textContent = `hsl(${Math.round(H)}, ${S}%, ${L}%)`;
+  document.getElementById('hueVal').textContent = Math.round(H)+'°';
+  document.getElementById('satLabel').textContent = S+'%';
+  document.getElementById('lightLabel').textContent = L+'%';
+
+  buildStrip(document.getElementById('tintStrip'), 'white', 6);
+  buildStrip(document.getElementById('shadeStrip'), 'black', 6);
+  buildStrip(document.getElementById('toneStrip'), 'gray', 6);
+
+  buildHarmonySwatches(document.getElementById('h-comp'), [H, H+180], S, L);
+  buildHarmonySwatches(document.getElementById('h-analog'), [H-30, H, H+30], S, L);
+  buildHarmonySwatches(document.getElementById('h-split'), [H, H+150, H+210], S, L);
+  buildHarmonySwatches(document.getElementById('h-triad'), [H, H+120, H+240], S, L);
+  buildHarmonySwatches(document.getElementById('h-tetrad'), [H, H+90, H+180, H+270], S, L);
+  buildHarmonySwatches(document.getElementById('h-mono'), [H,H,H,H], S, [20,40,60,80]);
+  // monochromatic needs varied lightness, handle separately:
+  const monoEl = document.getElementById('h-mono');
+  monoEl.innerHTML='';
+  [25,42,58,75].forEach(l=>{
+    const d = document.createElement('div');
+    d.style.background = hslToHex(H, S, l);
+    monoEl.appendChild(d);
+  });
+
+  // ratio bar
+  const tint20 = hslToHex(...mix(H,S,L,'white',0.75));
+  const tone = hslToHex(...mix(H,S,L,'gray',0.4));
+  document.getElementById('r60').style.background = tint20;
+  document.getElementById('r60').style.color = '#222';
+  document.getElementById('r30').style.background = tone;
+  document.getElementById('r30').style.color = L>50?'#111':'#fff';
+  document.getElementById('r10').style.background = baseHex;
+  document.getElementById('r10').style.color = L>55?'#111':'#fff';
+
+  // contrast
+  const rWhite = contrastRatio(baseHex, '#FFFFFF');
+  const rBlack = contrastRatio(baseHex, '#111111');
+  document.getElementById('cardWhiteText').style.background = baseHex;
+  document.getElementById('cardBlackText').style.background = baseHex;
+  const badgeW = document.getElementById('ratioWhite');
+  const badgeB = document.getElementById('ratioBlack');
+  badgeW.textContent = rWhite.toFixed(2)+':1';
+  badgeB.textContent = rBlack.toFixed(2)+':1';
+  badgeW.className = 'badge ' + (rWhite>=4.5 ? 'pass':'fail');
+  badgeB.className = 'badge ' + (rBlack>=4.5 ? 'pass':'fail');
+
+  // semantic UI palette — fully automatic from H/S/L
+  const semantic = computeSemanticPalette();
+  buildRoleGrid(semantic);
+  applyMock(semantic);
+}
+
+updateKnob();
+render();
+</script>
+
+</body>
+</html>
